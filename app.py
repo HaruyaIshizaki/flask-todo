@@ -1,5 +1,5 @@
 # app.py
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
@@ -19,9 +19,23 @@ class Task(db.Model):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    tasks = Task.query.all()
+    return render_template('index.html', tasks=tasks)
 
-if __name__=='__main__':
-    app.run(debug=True)
+@app.route('/add_task', methods=['GET', 'POST'])
+def add_task():
+    if request.method == 'POST':
+        task_content = request.form['content']
+        new_task = Task(content=task_content)
+        try:
+            db.session.add(new_task)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            return f'Failed to add your task: {str(e)}'
+
+    return render_template('add_task.html')
 
 # python3 app.pyでflask起動
+if __name__=='__main__':
+    app.run(debug=True)

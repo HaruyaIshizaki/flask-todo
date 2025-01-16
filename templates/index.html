@@ -8,8 +8,11 @@
 <body>
     <h1>Todo List</h1>
     <ul>
-        <li>task1</li>
-        <li>task2</li>
+        <!-- 以下の部分を変更 -->
+        {% for task in tasks %}
+         <li>{{ task.content }}</li>
+        {% endfor %}
     </ul>
+    <a href="add_task">タスクの追加</a>
 </body>
 </html>
