@@ -36,6 +36,20 @@ def add_task():
 
     return render_template('add_task.html')
 
+@app.route('/check_task/<int:id>', methods=['POST'])
+def check_task(id):
+    if request.method == 'POST':
+        task = Task.query.get_or_404(id)
+        task.completed = not task.completed
+        try:
+            db.session.commit()
+            return redirect('/')
+        except Exception as e:
+            db.session.rollback()
+            return f'Failed to check your task: {str(e)}'
+
+
+
 # python3 app.pyでflask起動
 if __name__=='__main__':
     app.run(debug=True)

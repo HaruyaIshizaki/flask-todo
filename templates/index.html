@@ -8,10 +8,16 @@
 <body>
     <h1>Todo List</h1>
     <ul>
-        <!-- 以下の部分を変更 -->
-        {% for task in tasks %}
-         <li>{{ task.content }}</li>
-        {% endfor %}
+    <!-- 以下の部分を変更 -->
+     {% for task in tasks %}
+     <li>
+        <form method="POST" action="{{ url_for('check_task', id=task.id) }}">
+            <label for="task_{{ task.id }}">{{ task.content }}</label>
+            <input type="checkbox" id="task_{{ task.id }}" name="task_{{ task.id }}"
+                   {% if task.completed %} checked {% endif %} onchange="this.form.submit()">
+        </form>
+     </li>
+    {% endfor %}
     </ul>
     <a href="add_task">タスクの追加</a>
 </body>
