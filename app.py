@@ -48,7 +48,17 @@ def check_task(id):
             db.session.rollback()
             return f'Failed to check your task: {str(e)}'
 
-
+@app.route('/delete_task/<int:id>', methods=['POST'])
+def delete_task(id):
+    if request.method == 'POST':
+        task = Task.query.get_or_404(id)
+        try:
+            db.session.delete(task)
+            db.session.commit()
+            return redirect('/')
+        except Exception as e:
+            db.session.rollback()
+            return f'Failed to delete your task: {str(e)}'
 
 # python3 app.pyでflask起動
 if __name__=='__main__':
